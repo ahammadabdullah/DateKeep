@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import WebApp from "@twa-dev/sdk";
 import { Calendar } from "@/components/ui/calendar";
 import { formatDateToLocalString } from "@/lib/utils";
 
-export default function CalendarPage() {
+export default function CalendarPage({ user }: any) {
   interface Event {
     id: string;
     note: string;
@@ -14,7 +13,6 @@ export default function CalendarPage() {
   const [entries, setEntries] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [hoveredEvent, setHoveredEvent] = useState<Event[] | null>(null);
-  const user = WebApp.initDataUnsafe.user;
   useEffect(() => {
     async function fetchEntries() {
       if (!user?.username) return;
@@ -44,13 +42,13 @@ export default function CalendarPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold text-center text-purple-600 ">
+      <h1 className="text-4xl font-bold text-center text-purple-400 ">
         DateKeep
       </h1>
       <h4 className="text-xl font-medium text-center text-gray-800 mb-8">
         Welcome {user?.first_name} {user?.last_name}
       </h4>
-      <div className="my-6 max-w-lg mx-auto bg-white rounded-lg shadow-lg">
+      <div className="my-6 max-w-lg mx-auto bg-white rounded-lg shadow-lg ">
         <Calendar
           modifiersClassNames={{
             highlighted: "bg-purple-200 text-black",

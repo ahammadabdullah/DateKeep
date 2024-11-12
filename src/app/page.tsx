@@ -1,21 +1,32 @@
 "use client";
 import CalendarPage from "@/components/calender/Calender";
-import WebApp from "@twa-dev/sdk";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
+
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
-
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setIsClient(true);
+    if (typeof window !== "undefined") {
+      import("@twa-dev/sdk").then((WebAppModule) => {
+        const WebApp = WebAppModule.default;
+        setUser(WebApp.initDataUnsafe.user);
+        setLoading(false);
+      });
+    }
   }, []);
 
-  if (!isClient) {
-    return <BeatLoader color="#800080" />;
+  if (loading || !isClient) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <BeatLoader size={20} color="#800080" />
+      </div>
+    );
   }
-  const user = WebApp.initDataUnsafe.user;
-  console.log(user);
-  if (!user)
+
+  if (!user) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
         <div className="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -25,11 +36,12 @@ export default function Home() {
         </div>
       </div>
     );
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <CalendarPage />
+        <CalendarPage user={user} />
       </div>
     </div>
   );
